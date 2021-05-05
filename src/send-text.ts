@@ -1,34 +1,41 @@
 import { IDiscJsonFeedItem } from "./interfaces.ts";
+import * as base64 from "https://denopkg.com/chiefbiiko/base64/mod.ts";
 
-export const sendText = (newItems : IDiscJsonFeedItem[], key:string, phone:string) => {
-  let message : any = newItems.map(item=>item.url?.substring(32,item.url.length-5).replaceAll('-',' ')).join(', ');
-
-  if(message.length >= 70){
-    message = message.substring(0,69);
+export const sendText = async (
+  accountSid: string,
+  authToken: string,
+  newItems: IDiscJsonFeedItem[],
+  fromNumber: string,
+  toNumber: string
+): Promise<any> => {
+  let messageBody: any = newItems
+    .map((item) =>
+      item.url?.substring(32, item.url.length - 5).replaceAll("-", " ")
+    )
+    .join(", ");
+  if (messageBody.length >= 111) {
+    messageBody = messageBody.substring(0, 110);
   }
+  
+  messageBody = messageBody+"\n https://bit.ly/3toXGnL";
+  const url: string = `https://api.twilio.com/2010-04-01/Accounts/${accountSid}/Messages.json`;
 
-  const body : IMsgBody = {
-    phone,
-    message,
-    key
-  }
-  console.log(`Message length is: ${message.length}`)
-  console.log(`Sending Message...\nMessage: \n${message}`);
-  fetch("https://textbelt.com/text", {
-    method: "post",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(body),
-  })
-    .then((response) => {
-      return response.json();
-    })
-    .then((data) => {
-      console.log('Msg sent.\n Response Info:\t:',data);
-    });
+  const encodedCredentials: string = base64.fromUint8Array(
+    new TextEncoder().encode(`${accountSid}:${authToken}`)
+  );
+  const body: URLSearchParams = new URLSearchParams({
+    To: toNumber,
+    From: fromNumber,
+    Body: messageBody,
+  });
+ 
+  const response = await fetch(url, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+      "Authorization": `Basic ${encodedCredentials}`,
+    },
+    body,
+  });
+  return response.json();
 };
-
-interface IMsgBody {
-  phone: string;
-  message:string;
-  key:string;
-}
