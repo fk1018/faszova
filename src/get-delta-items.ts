@@ -6,12 +6,10 @@ export const getDeltas = async (
 ): Promise<IDiscJsonFeedItem[]> => {
   let newItems: IDiscJsonFeedItem[] = [];
 
-  let oldItemsHash: Map<string,IDiscJsonFeedItem> = Object.fromEntries(
-    oldJsonFeed.items.map((item:IDiscJsonFeedItem) => [item.link, item])
-  );
+  let oldItemsHash = new Map(oldJsonFeed.items.map(item=>[item.url,JSON.stringify(item)]));
 
   newItems = newJsonFeed.items.filter((item:IDiscJsonFeedItem) => {
-    if(!!item.link && oldItemsHash.get(item.link)){
+    if(!!item.url && !oldItemsHash.get(item?.url)){
       return item;
     }
   });
