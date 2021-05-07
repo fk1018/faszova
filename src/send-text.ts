@@ -1,10 +1,10 @@
-import { IDiscJsonFeedItem } from "./interfaces.ts";
+import { JsonFeedItem } from "https://deno.land/x/rss@0.3.3/src/types/mod.ts";
 import * as base64 from "https://denopkg.com/chiefbiiko/base64/mod.ts";
 
 export const sendText = async (
   accountSid: string,
   authToken: string,
-  newItems: IDiscJsonFeedItem[],
+  newItems: JsonFeedItem[],
   fromNumber: string,
   toNumber: string
 ): Promise<any> => {
@@ -16,8 +16,8 @@ export const sendText = async (
   if (messageBody.length >= 111) {
     messageBody = messageBody.substring(0, 110);
   }
-  
-  messageBody = messageBody+"\n https://bit.ly/3toXGnL";
+
+  messageBody = messageBody + "\n https://bit.ly/3toXGnL";
   const url: string = `https://api.twilio.com/2010-04-01/Accounts/${accountSid}/Messages.json`;
 
   const encodedCredentials: string = base64.fromUint8Array(
@@ -28,12 +28,12 @@ export const sendText = async (
     From: fromNumber,
     Body: messageBody,
   });
- 
+
   const response = await fetch(url, {
     method: "POST",
     headers: {
       "Content-Type": "application/x-www-form-urlencoded",
-      "Authorization": `Basic ${encodedCredentials}`,
+      Authorization: `Basic ${encodedCredentials}`,
     },
     body,
   });
