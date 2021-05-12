@@ -8,7 +8,7 @@ export const sendText = async (
   fromNumber: string,
   toNumber: string
 ): Promise<any> => {
-  let messageBody: any = newItems
+  let messageBody: string = newItems
     .map((item) =>
       item.url?.substring(32, item.url.length - 5).replaceAll("-", " ")
     )
