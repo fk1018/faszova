@@ -18,5 +18,5 @@ export const getDeltas = async (
       return item;
     }
   });
-  return Promise.resolve(newItems);
+  return newItems;
 };

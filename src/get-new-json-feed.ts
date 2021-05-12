@@ -7,5 +7,5 @@ export const getNewItems = async (): Promise<JsonFeed> => {
   );
   const xml = await response.text();
   const { feed } = await deserializeFeed(xml, { outputJsonFeed: true });
-  return Promise.resolve(feed);
+  return feed;
 };

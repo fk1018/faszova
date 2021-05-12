@@ -5,5 +5,5 @@ export const getOldItems = async (
   itemStore: Store<JsonFeed>
 ): Promise<JsonFeed> => {
   const items: JsonFeed = itemStore.get();
-  return Promise.resolve(items);
+  return items;
 };

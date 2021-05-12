@@ -6,5 +6,4 @@ export const saveJsonFeed = async (
   itemStore: Store<JsonFeed>
 ): Promise<void> => {
   itemStore.set(njf);
-  Promise.resolve();
 };

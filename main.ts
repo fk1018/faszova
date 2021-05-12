@@ -12,7 +12,6 @@ import {
   saveJsonFeed,
   sendText,
 } from "./src/mod.ts";
-
 config({ safe: true });
 const fromNumber: string | undefined = Deno.env.get("FROM_NUMBER");
 const toNumber: string | undefined = Deno.env.get("TO_NUMBER");
@@ -25,11 +24,9 @@ const itemStore: Store<JsonFeed> = Store.open<JsonFeed>({
     items: [],
   },
 });
-
 let oldJsonFeed: JsonFeed = await getOldItems(itemStore);
 let newJsonFeed: JsonFeed = await getNewItems();
 let newItems: JsonFeedItem[] = await getDeltas(oldJsonFeed, newJsonFeed);
-
 if (
   !!accountSid &&
   !!authToken &&
@@ -44,6 +41,5 @@ if (
     fromNumber,
     toNumber
   );
-  console.log(`Message sent.\n Response:\n${response}\nUpdating Data...`);
   saveJsonFeed(newJsonFeed, itemStore);
 }
